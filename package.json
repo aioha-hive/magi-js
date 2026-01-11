@@ -1,0 +1,33 @@
+{
+  "name": "@aioha/magi",
+  "version": "0.0.1",
+  "description": "TypeScript library for Magi network",
+  "main": "build/index.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest"
+  },
+  "keywords": [
+    "magi",
+    "hive"
+  ],
+  "author": "techcoderx",
+  "license": "MIT",
+  "dependencies": {
+    "@ipld/dag-cbor": "^9.2.5",
+    "@ipld/dag-json": "^10.2.5",
+    "cborg": "^4.3.2",
+    "dag-jose-utils": "^4.0.0"
+  },
+  "devDependencies": {
+    "@aioha/aioha": "^1.8.0",
+    "ts-loader": "^9.5.4",
+    "viem": "^2.43.5",
+    "vitest": "^4.0.16",
+    "webpack": "^5.104.1",
+    "webpack-cli": "^6.0.1"
+  },
+  "peerDependencies": {
+    "@aioha/aioha": "^1.8.0"
+  }
+}
