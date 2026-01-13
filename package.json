@@ -22,12 +22,13 @@
   "devDependencies": {
     "@aioha/aioha": "^1.8.0",
     "ts-loader": "^9.5.4",
-    "viem": "^2.43.5",
+    "viem": "^2.44.1",
     "vitest": "^4.0.16",
     "webpack": "^5.104.1",
     "webpack-cli": "^6.0.1"
   },
   "peerDependencies": {
-    "@aioha/aioha": "^1.8.0"
+    "@aioha/aioha": "^1.8.0",
+    "viem": "2.x"
   }
 }
