@@ -1,11 +1,10 @@
-import { KeyTypes } from '@aioha/aioha/build/types.js'
 import { error } from '@aioha/aioha/build/lib/errors.js'
+import { encode as encodeJson } from '@ipld/dag-json'
 import { encodePayload } from 'dag-jose-utils'
-import { Result, MagiOperation, TxSigningShell, TxContainer, TxSigned } from '../types.js'
+import { Result, MagiKeyType, MagiOperation, TxSigningShell, TxContainer, TxSigned } from '../types.js'
 import { MagiWalletBase } from './wallet.js'
 import { MagiClient } from '../lib/client.js'
 import { encode } from '../lib/cborg-ts/encode.js'
-import { encode as encodeJson } from '@ipld/dag-json'
 import { broadcastTx } from '../requests.js'
 
 const RC_COSTS = {
@@ -35,7 +34,7 @@ export abstract class MagiWalletL2Base extends MagiWalletBase {
   abstract getUser(prefix?: boolean): string | undefined
   abstract signTx(shell: TxSigningShell): Promise<TxSigned>
 
-  async signAndBroadcastTx(tx: MagiOperation[], keyType: KeyTypes): Promise<Result> {
+  async signAndBroadcastTx(tx: MagiOperation[], keyType: MagiKeyType): Promise<Result> {
     const nonceErr = await this.refreshNonce()
     if (!!nonceErr) return nonceErr
 

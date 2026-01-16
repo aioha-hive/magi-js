@@ -28,6 +28,11 @@ export enum Wallet {
   Ethereum = 'evm'
 }
 
+export enum MagiKeyType {
+  Posting = 'posting',
+  Active = 'active'
+}
+
 export interface OpFer {
   type: 'consensus_stake' | 'consensus_unstake' | 'stake_hbd' | 'transfer' | 'unstake_hbd' | 'withdraw'
   payload: {

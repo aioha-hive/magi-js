@@ -1,7 +1,7 @@
-import { Aioha, KeyTypes, VscStakeType } from '@aioha/aioha'
+import type { Aioha, VscStakeType } from '@aioha/aioha'
 import { MagiWalletBase } from './wallet.js'
-import { Asset as HiveAsset, VscTxIntent } from '@aioha/aioha/build/types.js'
-import { Result, Asset, MagiOperation } from '../types.js'
+import { Asset as HiveAsset, KeyTypes, VscTxIntent } from '@aioha/aioha/build/types.js'
+import { Result, Asset, MagiKeyType, MagiOperation } from '../types.js'
 import { MagiClient } from '../lib/client.js'
 
 const toHiveAsset = (asset: Asset): HiveAsset => {
@@ -12,6 +12,16 @@ const toHiveAsset = (asset: Asset): HiveAsset => {
       return HiveAsset.HBD
     default:
       throw new Error('unsupported asset')
+  }
+}
+
+const toAiohaKT = (kt: MagiKeyType): KeyTypes => {
+  // should return the same string
+  switch (kt) {
+    case MagiKeyType.Posting:
+      return KeyTypes.Posting
+    case MagiKeyType.Active:
+      return KeyTypes.Active
   }
 }
 
@@ -28,19 +38,19 @@ export class MagiWalletAioha extends MagiWalletBase {
     return !!u ? (prefix ? 'hive:' : '') + u : undefined
   }
 
-  signAndBroadcastTx(tx: MagiOperation[], keyType: KeyTypes): Promise<Result> {
+  signAndBroadcastTx(tx: MagiOperation[], keyType: MagiKeyType): Promise<Result> {
     const auths = [this.getUser(false)!]
     return this.aioha.signAndBroadcastTx(
       tx.map((op) => [
         'custom_json',
         {
-          required_auths: keyType === KeyTypes.Active ? auths : [],
-          required_posting_auths: keyType === KeyTypes.Posting ? auths : [],
+          required_auths: keyType === MagiKeyType.Active ? auths : [],
+          required_posting_auths: keyType === MagiKeyType.Posting ? auths : [],
           id: 'vsc.' + op.type,
           json: JSON.stringify({ net_id: this.client.netId, ...op.payload })
         }
       ]),
-      keyType
+      toAiohaKT(keyType)
     )
   }
 
@@ -50,9 +60,9 @@ export class MagiWalletAioha extends MagiWalletBase {
     payload: any,
     rc_limit: number,
     intents: VscTxIntent[],
-    keyType: KeyTypes
+    keyType: MagiKeyType
   ): Promise<Result> {
-    return this.aioha.vscCallContract(contractId, action, payload, rc_limit, intents, keyType)
+    return this.aioha.vscCallContract(contractId, action, payload, rc_limit, intents, toAiohaKT(keyType))
   }
 
   transfer(to: string, amount: number, currency: Asset, memo?: string): Promise<Result> {
