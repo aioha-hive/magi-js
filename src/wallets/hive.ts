@@ -54,6 +54,7 @@ export class MagiWalletAioha extends MagiWalletBase {
     )
   }
 
+  /*
   call(
     contractId: string,
     action: string,
@@ -80,4 +81,5 @@ export class MagiWalletAioha extends MagiWalletBase {
   unstake(stakeType: VscStakeType, amount: number, to?: string, memo?: string): Promise<Result> {
     return this.aioha.vscUnstake(stakeType, amount, to, memo)
   }
+  */
 }
