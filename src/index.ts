@@ -27,12 +27,54 @@ export class Magi implements MagiWallet {
     this.client = new MagiClient()
   }
 
+  /**
+   * Register a Hive wallet using [Aioha](https://aioha.dev).
+   * @param aioha Aioha instance
+   */
   registerAioha(aioha: Aioha) {
     this.wallets.hive = new MagiWalletAioha(this.client, aioha)
   }
 
+  /**
+   * Register an Ethereum wallet using [Viem](https://viem.sh).
+   * @param viemClient Viem client
+   */
   registerViem(viemClient: ViemClient) {
     this.wallets.evm = new MagiWalletViem(this.client, viemClient)
+  }
+
+  /**
+   * Set Magi GraphQL API URL
+   * @param api Magi GraphQL API URL
+   */
+  setApi(api: string, fallbackApis?: string[]): void {
+    if (!api.startsWith('http://') && !api.startsWith('https://')) throw new Error('api must start from http:// or https://')
+    this.client.api = api
+    if (fallbackApis) this.client.fallbackApis = fallbackApis
+  }
+
+  /**
+   * Get current API endpoints(s).
+   * @returns Array of API endpoints(s), where the first item is the main endpoint and the remaining are fallbacks.
+   */
+  getApi(): string[] {
+    return [this.client.api, ...this.client.fallbackApis]
+  }
+
+  /**
+   * Set Magi network ID.
+   * @param netId Network ID
+   */
+  setNetId(netId: string): void {
+    this.client.netId = netId
+  }
+
+  /**
+   * Retrieve the current Magi network ID.
+   * @returns Network ID
+   */
+  getNetId(): string {
+    return this.client.netId
   }
 
   isConnected() {
