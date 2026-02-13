@@ -1,6 +1,7 @@
 import type { Aioha, VscStakeType } from '@aioha/aioha'
 import { error } from '@aioha/aioha/build/lib/errors.js'
-import { VscTxIntent } from '@aioha/aioha/build/types.js'
+import { VscTxIntent, Events } from '@aioha/aioha/build/types.js'
+import { SimpleEventEmitter } from '@aioha/aioha/build/lib/event-emitter.js'
 import type { Client as ViemClient } from 'viem'
 import { MagiClient } from './lib/client.js'
 import { Asset, MagiKeyType, MagiOperation, Result, Wallet } from './types.js'
@@ -21,10 +22,16 @@ export class Magi implements MagiWallet {
     hive?: MagiWalletAioha
     evm?: MagiWalletViem
   }
+  private eventEmitter: SimpleEventEmitter
+  private aiohaAccChg: () => any
+  private evmAccChg: () => any
 
   constructor() {
     this.wallets = {}
     this.client = new MagiClient()
+    this.eventEmitter = new SimpleEventEmitter()
+    this.aiohaAccChg = this.fwd(Wallet.Hive, 'account_changed')
+    this.evmAccChg = this.fwd(Wallet.Ethereum, 'account_changed')
   }
 
   /**
@@ -32,7 +39,7 @@ export class Magi implements MagiWallet {
    * @param aioha Aioha instance
    */
   registerAioha(aioha: Aioha) {
-    this.wallets.hive = new MagiWalletAioha(this.client, aioha)
+    this.wallets.hive = new MagiWalletAioha(this.client, this.eventEmitter, aioha)
   }
 
   /**
@@ -40,7 +47,7 @@ export class Magi implements MagiWallet {
    * @param viemClient Viem client
    */
   registerViem(viemClient: ViemClient) {
-    this.wallets.evm = new MagiWalletViem(this.client, viemClient)
+    this.wallets.evm = new MagiWalletViem(this.client, this.eventEmitter, viemClient)
   }
 
   /**
@@ -97,6 +104,7 @@ export class Magi implements MagiWallet {
 
   setWallet(wallet?: Wallet) {
     this.currentWallet = wallet
+    this.eventEmitter.emit('account_changed')
   }
 
   async signAndBroadcastTx(tx: MagiOperation[], keyType: MagiKeyType): Promise<Result> {
@@ -139,5 +147,62 @@ export class Magi implements MagiWallet {
     if (!this.isConnected()) return notLoggedInResult
     if (!isValidAmt(amount)) return invalidAmtErr
     return await this.getWI()!.unstake(stakeType, amount, to, memo)
+  }
+
+  /** ----- Events ----- */
+  private fwd(wallet: Wallet, eventName: Events) {
+    return () => {
+      if (this.getWallet() === wallet) this.eventEmitter.emit(eventName)
+    }
+  }
+
+  /**
+   * Get account changed event forwarder function by wallet type.
+   *
+   * The application should handle the registration of event listeners on upstream instances (i.e. Aioha, EIP-1193 provider etc.)
+   * @param wallet Wallet type
+   * @returns The forwarder function
+   */
+  getAccEventForwarder(wallet: Wallet) {
+    switch (wallet) {
+      case Wallet.Hive:
+        return this.aiohaAccChg
+      case Wallet.Ethereum:
+        return this.evmAccChg
+    }
+  }
+
+  /**
+   * Subscribe to an event. The listener function will be called every time the event is emitted.
+   *
+   * The list of event names may be found in the [docs](https://aioha.dev/docs/core/jsonrpc#events).
+   * @param eventName Event name to subscribe to
+   * @param listener Listener function
+   */
+  on(eventName: Events, listener: Function) {
+    this.eventEmitter.on(eventName, listener)
+    return this
+  }
+
+  /**
+   * Subscribe to an event once. The listener function will be called once on the next time the event is emitted.
+   *
+   * The list of event names may be found in the [docs](https://aioha.dev/docs/core/jsonrpc#events).
+   * @param eventName Event name to subscribe to
+   * @param listener Listener function
+   */
+  once(eventName: Events, listener: Function) {
+    this.eventEmitter.once(eventName, listener)
+    return this
+  }
+
+  /**
+   * Unsubscribe to an event by name and listener function.
+   * @param eventName Event name to unsubscribe from
+   * @param listener Listener function
+   */
+  off(eventName: Events, listener?: Function) {
+    this.eventEmitter.off(eventName, listener)
+    return this
   }
 }

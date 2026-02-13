@@ -1,15 +1,18 @@
 import { VscStakeType as StakeType, VscTxIntent as Intent } from '@aioha/aioha/build/types.js'
 import { error } from '@aioha/aioha/build/lib/errors.js'
+import { SimpleEventEmitter } from '@aioha/aioha/build/lib/event-emitter.js'
 import { Asset, MagiKeyType, MagiOperation, Result, OpFer } from '../types.js'
 import { MagiClient } from '../lib/client.js'
 import { getNonce } from '../requests.js'
 
 export abstract class MagiWalletBase implements MagiWallet {
   protected client: MagiClient
+  private eventEmitter: SimpleEventEmitter
   protected nonce?: number
 
-  constructor(client: MagiClient) {
+  constructor(client: MagiClient, emitter: SimpleEventEmitter) {
     this.client = client
+    this.eventEmitter = emitter
   }
 
   abstract getUser(prefix?: boolean): string | undefined
@@ -65,11 +68,22 @@ export abstract class MagiWalletBase implements MagiWallet {
       if (typeof this.nonce !== 'number') return error(-32603, 'Failed to fetch nonce')
     }
   }
+
+  protected emitSignTx() {
+    this.eventEmitter.emit('sign_tx_request')
+  }
 }
 
 export interface MagiWallet {
   signAndBroadcastTx(tx: MagiOperation[], keyType: MagiKeyType): Promise<Result>
-  call(contractId: string, action: string, payload: any, rc_limit: number, intents: Intent[], keyType: MagiKeyType): Promise<Result>
+  call(
+    contractId: string,
+    action: string,
+    payload: any,
+    rc_limit: number,
+    intents: Intent[],
+    keyType: MagiKeyType
+  ): Promise<Result>
   transfer(to: string, amount: number, currency: Asset, memo?: string): Promise<Result>
   unmap(to: string, amount: number, currency: Asset, memo?: string): Promise<Result>
   stake(stakeType: StakeType, amount: number, to?: string, memo?: string): Promise<Result>

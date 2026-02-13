@@ -1,3 +1,4 @@
+import { SimpleEventEmitter } from '@aioha/aioha/build/lib/event-emitter.js'
 import { encode } from '@ipld/dag-cbor'
 import { encodePayload } from 'dag-jose-utils'
 import { convertCBORToEIP712TypedData } from '../lib/eip712.js'
@@ -11,8 +12,8 @@ import { MagiError } from '../lib/error.js'
 export class MagiWalletViem extends MagiWalletL2Base {
   wallet: Client
 
-  constructor(magiClient: MagiClient, viemClient: Client) {
-    super(magiClient)
+  constructor(magiClient: MagiClient, emitter: SimpleEventEmitter, viemClient: Client) {
+    super(magiClient, emitter)
     this.wallet = viemClient
   }
 
@@ -26,6 +27,7 @@ export class MagiWalletViem extends MagiWalletL2Base {
     try {
       const encodedShell = encode(shell)
       const typedData = convertCBORToEIP712TypedData('vsc.network', encodedShell, 'tx_container_v0')
+      this.emitSignTx()
       //@ts-ignore Account connection checks are already done
       const signature = await signTypedData(this.wallet, typedData)
 

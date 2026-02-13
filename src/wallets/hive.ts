@@ -1,19 +1,9 @@
-import type { Aioha, VscStakeType } from '@aioha/aioha'
+import type { Aioha } from '@aioha/aioha'
 import { MagiWalletBase } from './wallet.js'
-import { Asset as HiveAsset, KeyTypes, VscTxIntent } from '@aioha/aioha/build/types.js'
-import { Result, Asset, MagiKeyType, MagiOperation } from '../types.js'
+import { KeyTypes } from '@aioha/aioha/build/types.js'
+import { SimpleEventEmitter } from '@aioha/aioha/build/lib/event-emitter.js'
+import { Result, MagiKeyType, MagiOperation } from '../types.js'
 import { MagiClient } from '../lib/client.js'
-
-const toHiveAsset = (asset: Asset): HiveAsset => {
-  switch (asset) {
-    case Asset.hive:
-      return HiveAsset.HIVE
-    case Asset.hbd:
-      return HiveAsset.HBD
-    default:
-      throw new Error('unsupported asset')
-  }
-}
 
 const toAiohaKT = (kt: MagiKeyType): KeyTypes => {
   // should return the same string
@@ -26,10 +16,10 @@ const toAiohaKT = (kt: MagiKeyType): KeyTypes => {
 }
 
 export class MagiWalletAioha extends MagiWalletBase {
-  private aioha: Aioha
+  aioha: Aioha
 
-  constructor(client: MagiClient, aioha: Aioha) {
-    super(client)
+  constructor(client: MagiClient, emitter: SimpleEventEmitter, aioha: Aioha) {
+    super(client, emitter)
     this.aioha = aioha
   }
 
@@ -40,6 +30,7 @@ export class MagiWalletAioha extends MagiWalletBase {
 
   signAndBroadcastTx(tx: MagiOperation[], keyType: MagiKeyType): Promise<Result> {
     const auths = [this.getUser(false)!]
+    this.emitSignTx()
     return this.aioha.signAndBroadcastTx(
       tx.map((op) => [
         'custom_json',
