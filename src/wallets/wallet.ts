@@ -66,6 +66,8 @@ export abstract class MagiWalletBase implements MagiWallet {
         return error(-32603, 'Failed to fetch nonce')
       }
       if (typeof this.nonce !== 'number') return error(-32603, 'Failed to fetch nonce')
+    } else {
+      this.nonce++
     }
   }
 

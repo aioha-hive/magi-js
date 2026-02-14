@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "TypeScript library for Magi network",
   "main": "build/index.js",
+  "types": "build/index.d.ts",
   "scripts": {
     "build": "tsc",
     "test": "vitest"

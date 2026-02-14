@@ -8,6 +8,7 @@ import { Asset, MagiKeyType, MagiOperation, Result, Wallet } from './types.js'
 import { MagiWallet, MagiWalletBase } from './wallets/wallet.js'
 import { MagiWalletAioha } from './wallets/hive.js'
 import { MagiWalletViem } from './wallets/viem.js'
+export { Wallet, Asset, MagiKeyType, MagiOperation } from './types.js'
 
 const notLoggedInResult = error(4900, 'Wallet not connected')
 const invalidAmtErr = error(5006, 'amount must be greater than 0')
