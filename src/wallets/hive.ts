@@ -28,7 +28,7 @@ export class MagiWalletAioha extends MagiWalletBase {
     return !!u ? (prefix ? 'hive:' : '') + u : undefined
   }
 
-  signAndBroadcastTx(tx: MagiOperation[], keyType: MagiKeyType): Promise<Result> {
+  signAndBroadcastTx(tx: MagiOperation[], keyType: MagiKeyType = MagiKeyType.Active): Promise<Result> {
     const auths = [this.getUser(false)!]
     this.emitSignTx()
     return this.aioha.signAndBroadcastTx(

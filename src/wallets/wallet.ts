@@ -16,7 +16,7 @@ export abstract class MagiWalletBase implements MagiWallet {
   }
 
   abstract getUser(prefix?: boolean): string | undefined
-  abstract signAndBroadcastTx(tx: MagiOperation[], keyType: MagiKeyType): Promise<Result>
+  abstract signAndBroadcastTx(tx: MagiOperation[], keyType?: MagiKeyType): Promise<Result>
 
   call(
     contractId: string,
@@ -24,7 +24,7 @@ export abstract class MagiWalletBase implements MagiWallet {
     payload: any,
     rc_limit: number,
     intents: Intent[],
-    keyType: MagiKeyType
+    keyType?: MagiKeyType
   ): Promise<Result> {
     return this.signAndBroadcastTx(
       [{ type: 'call', payload: { contract_id: contractId, action, payload, rc_limit, intents } }],
@@ -77,14 +77,14 @@ export abstract class MagiWalletBase implements MagiWallet {
 }
 
 export interface MagiWallet {
-  signAndBroadcastTx(tx: MagiOperation[], keyType: MagiKeyType): Promise<Result>
+  signAndBroadcastTx(tx: MagiOperation[], keyType?: MagiKeyType): Promise<Result>
   call(
     contractId: string,
     action: string,
     payload: any,
     rc_limit: number,
     intents: Intent[],
-    keyType: MagiKeyType
+    keyType?: MagiKeyType
   ): Promise<Result>
   transfer(to: string, amount: number, currency: Asset, memo?: string): Promise<Result>
   unmap(to: string, amount: number, currency: Asset, memo?: string): Promise<Result>

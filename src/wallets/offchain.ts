@@ -35,7 +35,7 @@ export abstract class MagiWalletL2Base extends MagiWalletBase {
   abstract getUser(prefix?: boolean): string | undefined
   abstract signTx(shell: TxSigningShell): Promise<TxSigned>
 
-  async signAndBroadcastTx(tx: MagiOperation[], keyType: MagiKeyType): Promise<Result> {
+  async signAndBroadcastTx(tx: MagiOperation[], keyType?: MagiKeyType): Promise<Result> {
     const nonceErr = await this.refreshNonce()
     if (!!nonceErr) return nonceErr
 

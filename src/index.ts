@@ -108,7 +108,7 @@ export class Magi implements MagiWallet {
     this.eventEmitter.emit('account_changed')
   }
 
-  async signAndBroadcastTx(tx: MagiOperation[], keyType: MagiKeyType): Promise<Result> {
+  async signAndBroadcastTx(tx: MagiOperation[], keyType?: MagiKeyType): Promise<Result> {
     if (!this.isConnected()) return notLoggedInResult
     if (tx.length === 0) return emptyOpsErr
     return await this.getWI()!.signAndBroadcastTx(tx, keyType)
@@ -120,7 +120,7 @@ export class Magi implements MagiWallet {
     payload: any,
     rc_limit: number,
     intents: VscTxIntent[],
-    keyType: MagiKeyType
+    keyType?: MagiKeyType
   ): Promise<Result> {
     if (!this.isConnected()) return notLoggedInResult
     return await this.getWI()!.call(contractId, action, payload, rc_limit, intents, keyType)
