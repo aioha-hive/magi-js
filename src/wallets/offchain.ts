@@ -1,8 +1,7 @@
 import { error } from '@aioha/aioha/build/lib/errors.js'
-import { SimpleEventEmitter } from '@aioha/aioha/build/lib/event-emitter.js'
 import { encode as encodeJson } from '@ipld/dag-json'
 import { encodePayload } from 'dag-jose-utils'
-import { Result, MagiKeyType, MagiOperation, TxSigningShell, TxContainer, TxSigned } from '../types.js'
+import { Result, MagiKeyType, MagiOperation, TxSigningShell, TxContainer, TxSigned, MagiEventEmitter } from '../types.js'
 import { MagiWalletBase } from './wallet.js'
 import { MagiClient } from '../lib/client.js'
 import { encode } from '../lib/cborg-ts/encode.js'
@@ -28,7 +27,7 @@ const u8aToB64 = (uint8Array: Uint8Array) => {
 }
 
 export abstract class MagiWalletL2Base extends MagiWalletBase {
-  constructor(client: MagiClient, emitter: SimpleEventEmitter) {
+  constructor(client: MagiClient, emitter: MagiEventEmitter) {
     super(client, emitter)
   }
 

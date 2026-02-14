@@ -22,8 +22,8 @@ importers:
         version: 4.0.0
     devDependencies:
       '@aioha/aioha':
-        specifier: ^1.8.0
-        version: 1.8.0(webextension-polyfill@0.12.0)
+        specifier: ^1.8.2
+        version: 1.8.2(webextension-polyfill@0.12.0)
       ts-loader:
         specifier: ^9.5.4
         version: 9.5.4(typescript@5.9.3)(webpack@5.104.1)
@@ -45,15 +45,15 @@ packages:
   '@adraffy/ens-normalize@1.11.1':
     resolution: {integrity: sha512-nhCBV3quEgesuf7c7KYfperqSS14T8bYuvJ8PcLJp6znkZpFc0AuW4qBtr8eKVyPPe/8RSr7sglCWPU5eaxwKQ==}
 
-  '@aioha/aioha@1.8.0':
-    resolution: {integrity: sha512-ybgFI/28quDwbsiDALZalJpHWslHQ71ycp9LJh7N80lKkRK7L/cAWXfTt+sJY6Aoz2+f+YH+2WmOxiuWolhdbg==}
+  '@aioha/aioha@1.8.2':
+    resolution: {integrity: sha512-Q+WK7/u4oi7kMSrPLnJ6LMjTCVMv8dVAlB1/06s097mjPINmidBqDmLc5VgXnCfj/qQ0bWFE0eDOL3O7Vm7OCg==}
 
   '@aioha/ledger-app-hive@0.0.2':
     resolution: {integrity: sha512-+ZUe9Iyv00WA5TDfi7TsCHKl5b22prR06JAG9u/9m9jePbGB83dtUMS65e/q3oXiMX78M4/YaDI8DYdIJmnk1A==}
     engines: {node: '>=18.0.0'}
 
-  '@aioha/tx-digest@2.0.1':
-    resolution: {integrity: sha512-fl2xm58YB/ZvzN9Pb6hJfhXlknpoq3EYXHD8QJ5Xn6O6w8arkxOUWuYEGD82lZnFFsZsMfQvniExrrvnpvgI1A==}
+  '@aioha/tx-digest@2.0.2':
+    resolution: {integrity: sha512-sY4fLevN7MjggVO4lG+H8iibw6k22ChXmE4mYVU5GitL3mLvoj+VU/zA3KQVxcsszziF1Y/5+TYnnd99vGtx5g==}
 
   '@discoveryjs/json-ext@0.6.3':
     resolution: {integrity: sha512-4B4OijXeVNOPZlYA2oEwWOTkzyltLao+xbotHQeqN++Rv27Y6s818+n2Qkp8q+Fxhn0t/5lA5X1Mxktud8eayQ==}
@@ -238,8 +238,8 @@ packages:
   '@hiveio/dhive@1.3.2':
     resolution: {integrity: sha512-kJjp3TbpIlODxjJX4BWwvOf+cMxT8CFH/mNQ40RRjR2LP0a4baSWae1G+U/q/NtgjsIQz6Ja40tvnw6KF12I+g==}
 
-  '@hiveio/wax@1.27.11-rc0':
-    resolution: {integrity: sha512-9t7rYkGYby4zXUkE1DaF6VseTj5P4Ka/AQai7z9nSKRqzVnmuNlKI+ZTWxEwmJLU9SyKdz5rKrUNwAi7Xig1tg==}
+  '@hiveio/wax@2.0.1':
+    resolution: {integrity: sha512-1T+VLbj98ykHynKAJkBDAK72PVPrahFL1gKhn2FpnrEFmjINf7Gkog+6qHM9TedYjj8qiCVjuxzv7UhJ+Xf4mA==}
     engines: {node: ^20.11 || >= 21.2}
 
   '@ipld/dag-cbor@9.2.5':
@@ -1655,12 +1655,12 @@ snapshots:
 
   '@adraffy/ens-normalize@1.11.1': {}
 
-  '@aioha/aioha@1.8.0(webextension-polyfill@0.12.0)':
+  '@aioha/aioha@1.8.2(webextension-polyfill@0.12.0)':
     dependencies:
       '@aioha/ledger-app-hive': 0.0.2
-      '@aioha/tx-digest': 2.0.1
+      '@aioha/tx-digest': 2.0.2
       '@hiveio/dhive': 1.3.2
-      '@hiveio/wax': 1.27.11-rc0
+      '@hiveio/wax': 2.0.1
       '@ledgerhq/hw-transport-webusb': 6.29.15
       '@metamask/providers': 22.1.1(webextension-polyfill@0.12.0)
       js-md5: 0.8.3
@@ -1679,7 +1679,7 @@ snapshots:
       inherits: 2.0.4
       varint: 6.0.0
 
-  '@aioha/tx-digest@2.0.1':
+  '@aioha/tx-digest@2.0.2':
     dependencies:
       bs58: 6.0.0
 
@@ -1805,7 +1805,7 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@hiveio/wax@1.27.11-rc0':
+  '@hiveio/wax@2.0.1':
     dependencies:
       events: 3.3.0
 
@@ -1840,7 +1840,7 @@ snapshots:
 
   '@ledgerhq/devices@8.4.7':
     dependencies:
-      '@ledgerhq/errors': 6.22.0
+      '@ledgerhq/errors': 6.28.0
       '@ledgerhq/logs': 6.13.0
       rxjs: 7.8.2
       semver: 7.7.3
@@ -1873,7 +1873,7 @@ snapshots:
   '@ledgerhq/hw-transport@6.31.7':
     dependencies:
       '@ledgerhq/devices': 8.4.7
-      '@ledgerhq/errors': 6.22.0
+      '@ledgerhq/errors': 6.28.0
       '@ledgerhq/logs': 6.13.0
       events: 3.3.0
 

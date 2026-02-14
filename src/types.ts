@@ -1,4 +1,5 @@
 import type { VscTxIntent } from '@aioha/aioha/build/types.js'
+import type { SimpleEventEmitter } from '@aioha/aioha/build/lib/event-emitter.js'
 
 interface BaseResult {
   success: boolean
@@ -86,3 +87,6 @@ export type TxSigned = {
   sigs: TxSig[]
   rawTx: Uint8Array
 }
+
+export type MagiEvents = 'wallet_changed' | 'sign_tx_request'
+export type MagiEventEmitter = SimpleEventEmitter<MagiEvents>

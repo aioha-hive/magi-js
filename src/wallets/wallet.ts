@@ -1,16 +1,15 @@
 import { VscStakeType as StakeType, VscTxIntent as Intent } from '@aioha/aioha/build/types.js'
 import { error } from '@aioha/aioha/build/lib/errors.js'
-import { SimpleEventEmitter } from '@aioha/aioha/build/lib/event-emitter.js'
-import { Asset, MagiKeyType, MagiOperation, Result, OpFer } from '../types.js'
+import { Asset, MagiKeyType, MagiOperation, Result, OpFer, MagiEventEmitter } from '../types.js'
 import { MagiClient } from '../lib/client.js'
 import { getNonce } from '../requests.js'
 
 export abstract class MagiWalletBase implements MagiWallet {
   protected client: MagiClient
-  private eventEmitter: SimpleEventEmitter
+  private eventEmitter: MagiEventEmitter
   protected nonce?: number
 
-  constructor(client: MagiClient, emitter: SimpleEventEmitter) {
+  constructor(client: MagiClient, emitter: MagiEventEmitter) {
     this.client = client
     this.eventEmitter = emitter
   }

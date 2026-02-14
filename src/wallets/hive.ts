@@ -1,8 +1,7 @@
 import type { Aioha } from '@aioha/aioha'
 import { MagiWalletBase } from './wallet.js'
 import { KeyTypes } from '@aioha/aioha/build/types.js'
-import { SimpleEventEmitter } from '@aioha/aioha/build/lib/event-emitter.js'
-import { Result, MagiKeyType, MagiOperation } from '../types.js'
+import { Result, MagiKeyType, MagiOperation, MagiEventEmitter } from '../types.js'
 import { MagiClient } from '../lib/client.js'
 
 const toAiohaKT = (kt: MagiKeyType): KeyTypes => {
@@ -18,7 +17,7 @@ const toAiohaKT = (kt: MagiKeyType): KeyTypes => {
 export class MagiWalletAioha extends MagiWalletBase {
   aioha: Aioha
 
-  constructor(client: MagiClient, emitter: SimpleEventEmitter, aioha: Aioha) {
+  constructor(client: MagiClient, emitter: MagiEventEmitter, aioha: Aioha) {
     super(client, emitter)
     this.aioha = aioha
   }
