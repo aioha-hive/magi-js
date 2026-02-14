@@ -22,6 +22,10 @@ export class MagiWalletAioha extends MagiWalletBase {
     this.aioha = aioha
   }
 
+  setAioha(aioha: Aioha) {
+    this.aioha = aioha
+  }
+
   getUser(prefix?: boolean): string | undefined {
     const u = this.aioha.getCurrentUser()
     return !!u ? (prefix ? 'hive:' : '') + u : undefined

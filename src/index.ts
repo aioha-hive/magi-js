@@ -35,16 +35,24 @@ export class Magi implements MagiWallet {
    * Register a Hive wallet using [Aioha](https://aioha.dev).
    * @param aioha Aioha instance
    */
-  registerAioha(aioha: Aioha) {
-    this.wallets.hive = new MagiWalletAioha(this.client, this.eventEmitter, aioha)
+  setAioha(aioha: Aioha) {
+    if (!this.wallets.hive) {
+      this.wallets.hive = new MagiWalletAioha(this.client, this.eventEmitter, aioha)
+    } else {
+      this.wallets.hive.setAioha(aioha)
+    }
   }
 
   /**
    * Register an Ethereum wallet using [Viem](https://viem.sh).
    * @param viemClient Viem client
    */
-  registerViem(viemClient: ViemClient) {
-    this.wallets.evm = new MagiWalletViem(this.client, this.eventEmitter, viemClient)
+  setViem(viemClient: ViemClient) {
+    if (!this.wallets.evm) {
+      this.wallets.evm = new MagiWalletViem(this.client, this.eventEmitter, viemClient)
+    } else {
+      this.wallets.evm.setClient(viemClient)
+    }
   }
 
   /**
@@ -81,35 +89,59 @@ export class Magi implements MagiWallet {
     return this.client.netId
   }
 
-  isConnected() {
+  /**
+   * Returns a boolean of whether an account is connected or not.
+   */
+  isConnected(): boolean {
     return !!this.currentWallet && !!this.wallets[this.currentWallet]!.getUser()
   }
 
+  /**
+   * Retrieve the connected user address.
+   * @param prefix Whether to include a prefix (`did:` or `hive:`)
+   * @returns The user address if any
+   */
   getUser(prefix?: boolean): string | undefined {
     return !!this.currentWallet ? this.wallets[this.currentWallet]?.getUser(prefix) : undefined
   }
 
-  getWallet(): string | undefined {
+  /**
+   * Retrieve the enum of the wallet type currently in use.
+   */
+  getWallet(): Wallet | undefined {
     return this.currentWallet
   }
 
-  getWalletInstance(): MagiWalletBase | undefined {
+  getWI(): MagiWalletBase | undefined {
     return this.currentWallet ? this.wallets[this.currentWallet] : undefined
   }
 
-  getWI = this.getWalletInstance
-
-  setWallet(wallet?: Wallet) {
-    this.currentWallet = wallet
-    this.eventEmitter.emit('wallet_changed')
+  /**
+   * Set the wallet type to use (Hive or Ethereum)
+   * @param wallet The new wallet enum
+   */
+  setWallet(wallet: Wallet) {
+    if (wallet !== this.currentWallet) {
+      this.currentWallet = wallet
+      this.eventEmitter.emit('wallet_changed')
+    }
   }
 
+  /**
+   * Sign and broadcase a Magi transaction.
+   * @param tx List of Magi operations
+   * @param keyType Active or posting auth (only applicable for Hive wallets)
+   * @returns Transaction result
+   */
   async signAndBroadcastTx(tx: MagiOperation[], keyType?: MagiKeyType): Promise<Result> {
     if (!this.isConnected()) return notLoggedInResult
     if (tx.length === 0) return emptyOpsErr
     return await this.getWI()!.signAndBroadcastTx(tx, keyType)
   }
 
+  /**
+   * Call a Magi contract.
+   */
   async call(
     contractId: string,
     action: string,
@@ -122,24 +154,36 @@ export class Magi implements MagiWallet {
     return await this.getWI()!.call(contractId, action, payload, rc_limit, intents, keyType)
   }
 
+  /**
+   * Transfer tokens to another Magi account.
+   */
   async transfer(to: string, amount: number, currency: Asset, memo?: string): Promise<Result> {
     if (!this.isConnected()) return notLoggedInResult
     if (!isValidAmt(amount)) return invalidAmtErr
     return await this.getWI()!.transfer(to, amount, currency, memo)
   }
 
+  /**
+   * Unmap tokens from Magi.
+   */
   async unmap(to: string, amount: number, currency: Asset, memo?: string): Promise<Result> {
     if (!this.isConnected()) return notLoggedInResult
     if (!isValidAmt(amount)) return invalidAmtErr
     return await this.getWI()!.unmap(to, amount, currency, memo)
   }
 
+  /**
+   * Stake tokens on Magi.
+   */
   async stake(stakeType: VscStakeType, amount: number, to?: string, memo?: string): Promise<Result> {
     if (!this.isConnected()) return notLoggedInResult
     if (!isValidAmt(amount)) return invalidAmtErr
     return await this.getWI()!.stake(stakeType, amount, to, memo)
   }
 
+  /**
+   * Unstake tokens on Magi.
+   */
   async unstake(stakeType: VscStakeType, amount: number, to?: string, memo?: string): Promise<Result> {
     if (!this.isConnected()) return notLoggedInResult
     if (!isValidAmt(amount)) return invalidAmtErr

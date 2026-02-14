@@ -16,6 +16,10 @@ export class MagiWalletViem extends MagiWalletL2Base {
     this.wallet = viemClient
   }
 
+  setClient(client: Client) {
+    this.wallet = client
+  }
+
   getUser(prefix?: boolean): string | undefined {
     const account = this.wallet.account
     if (!account) return undefined
