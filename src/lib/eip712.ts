@@ -248,7 +248,6 @@ const _decodeOptions = {
   strict: true,
   useMaps: false,
   rejectDuplicateMapKeys: true,
-  /** @type {import('cborg').TagDecoder[]} */
   tags: []
 }
 

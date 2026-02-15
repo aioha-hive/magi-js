@@ -6,6 +6,9 @@
   "types": "build/index.d.ts",
   "scripts": {
     "build": "tsc",
+    "webpack": "webpack",
+    "clean": "rm -rf dist/* build/*",
+    "prepublish": "pnpm run clean && pnpm run build && pnpm run webpack",
     "test": "vitest"
   },
   "keywords": [
@@ -17,7 +20,6 @@
   "dependencies": {
     "@ipld/dag-cbor": "^9.2.5",
     "@ipld/dag-json": "^10.2.5",
-    "cborg": "^4.3.2",
     "dag-jose-utils": "^4.0.0"
   },
   "devDependencies": {
@@ -26,6 +28,7 @@
     "viem": "^2.44.1",
     "vitest": "^4.0.16",
     "webpack": "^5.104.1",
+    "webpack-bundle-analyzer": "^5.2.0",
     "webpack-cli": "^6.0.1"
   },
   "peerDependencies": {
