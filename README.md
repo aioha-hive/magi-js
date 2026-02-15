@@ -16,7 +16,7 @@ pnpm i @aioha/magi @aioha/aioha viem
 ## Usage Example
 
 ```js
-import { Magi, Wallet } from '@aioha/magi'
+import { Magi, Wallet, Asset } from '@aioha/magi'
 import { createWalletClient, http } from 'viem'
 import { initAioha } from '@aioha/aioha'
 
@@ -41,7 +41,7 @@ magi.setAioha(aioha)
 magi.setWallet(Wallet.Ethereum)
 
 // Transfer 1 HBD
-const xfer = await magi.transfer('did:pkh:eip155:1:0xrecipient', 1, 'hbd', '')
+const xfer = await magi.transfer('did:pkh:eip155:1:0xrecipient', 1, Asset.hbd, '')
 
 // Call contract
 const dumpEnv = await magi.call('vsc1contractid', 'method', 'payload', 200, [])
