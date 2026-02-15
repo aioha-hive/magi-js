@@ -1,6 +1,6 @@
 # Magi JS
 
-JavaScript library for interacting with [Magi network](https://magi.eco).
+JavaScript library for interacting with the [Magi network](https://magi.eco).
 
 ## Supported Wallet Types
 
@@ -16,7 +16,7 @@ pnpm i @aioha/magi @aioha/aioha viem
 ## Usage Example
 
 ```js
-import { Magi, Wallet, MagiKeyType } from '@aioha/magi'
+import { Magi, Wallet } from '@aioha/magi'
 import { createWalletClient, http } from 'viem'
 import { initAioha } from '@aioha/aioha'
 
@@ -44,7 +44,7 @@ magi.setWallet(Wallet.Ethereum)
 const xfer = await magi.transfer('did:pkh:eip155:1:0xrecipient', 1, 'hbd', '')
 
 // Call contract
-const dumpEnv = await magi.call('vsc1contractid', 'method', 'payload', 200, [], MagiKeyType.Active)
+const dumpEnv = await magi.call('vsc1contractid', 'method', 'payload', 200, [])
 
 // Sign and broadcast multi-op transaction
 const call = await magi.signAndBroadcastTx([

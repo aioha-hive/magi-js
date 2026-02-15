@@ -17,6 +17,20 @@
   ],
   "author": "techcoderx",
   "license": "MIT",
+  "homepage": "https://github.com/aioha-hive/magi-js",
+  "repository": {
+    "url": "https://github.com/aioha-hive/magi-js"
+  },
+  "bugs": {
+    "url": "https://github.com/aioha-hive/magi-js/issues"
+  },
+  "files": [
+    "src",
+    "dist",
+    "build",
+    "LICENSE",
+    "README.md"
+  ],
   "dependencies": {
     "@ipld/dag-cbor": "^9.2.5",
     "@ipld/dag-json": "^10.2.5",
