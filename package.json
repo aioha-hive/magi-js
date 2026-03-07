@@ -32,9 +32,7 @@
     "README.md"
   ],
   "dependencies": {
-    "@ipld/dag-cbor": "^9.2.5",
-    "@ipld/dag-json": "^10.2.5",
-    "dag-jose-utils": "^4.0.0"
+    "multiformats": "^13.4.2"
   },
   "devDependencies": {
     "@aioha/aioha": "^1.8.2",

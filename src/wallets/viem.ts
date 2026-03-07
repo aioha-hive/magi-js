@@ -1,5 +1,5 @@
-import { encode } from '@ipld/dag-cbor'
-import { encodePayload } from 'dag-jose-utils'
+import { encode } from '../lib/dag-cbor.js'
+import { encodePayload } from '../lib/dag-jose-utils.js'
 import { convertCBORToEIP712TypedData } from '../lib/eip712.js'
 import { MagiClient } from '../lib/client.js'
 import { TxSigningShell, TxSigned, MagiEventEmitter } from '../types.js'

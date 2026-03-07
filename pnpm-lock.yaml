@@ -8,15 +8,9 @@ importers:
 
   .:
     dependencies:
-      '@ipld/dag-cbor':
-        specifier: ^9.2.5
-        version: 9.2.5
-      '@ipld/dag-json':
-        specifier: ^10.2.5
-        version: 10.2.5
-      dag-jose-utils:
-        specifier: ^4.0.0
-        version: 4.0.0
+      multiformats:
+        specifier: ^13.4.2
+        version: 13.4.2
     devDependencies:
       '@aioha/aioha':
         specifier: ^1.8.2
@@ -245,14 +239,6 @@ packages:
   '@hiveio/wax@2.0.1':
     resolution: {integrity: sha512-1T+VLbj98ykHynKAJkBDAK72PVPrahFL1gKhn2FpnrEFmjINf7Gkog+6qHM9TedYjj8qiCVjuxzv7UhJ+Xf4mA==}
     engines: {node: ^20.11 || >= 21.2}
-
-  '@ipld/dag-cbor@9.2.5':
-    resolution: {integrity: sha512-84wSr4jv30biui7endhobYhXBQzQE4c/wdoWlFrKcfiwH+ofaPg8fwsM8okX9cOzkkrsAsNdDyH3ou+kiLquwQ==}
-    engines: {node: '>=16.0.0', npm: '>=7.0.0'}
-
-  '@ipld/dag-json@10.2.5':
-    resolution: {integrity: sha512-Q4Fr3IBDEN8gkpgNefynJ4U/ZO5Kwr7WSUMBDbZx0c37t0+IwQCTM9yJh8l5L4SRFjm31MuHwniZ/kM+P7GQ3Q==}
-    engines: {node: '>=16.0.0', npm: '>=7.0.0'}
 
   '@jridgewell/gen-mapping@0.3.13':
     resolution: {integrity: sha512-2kkt/7niJ6MgEPxF0bYdQ6etZaA+fQvDcLKckhy1yIQOzaoKjBBjSj63/aLVjYE3qhRt5dvM+uUyfCg6UKCBbA==}
@@ -765,10 +751,6 @@ packages:
   caniuse-lite@1.0.30001762:
     resolution: {integrity: sha512-PxZwGNvH7Ak8WX5iXzoK1KPZttBXNPuaOvI2ZYU7NrlM+d9Ov+TUvlLOBNGzVXAntMSMMlJPd+jY6ovrVjSmUw==}
 
-  cborg@4.3.2:
-    resolution: {integrity: sha512-l+QzebEAG0vb09YKkaOrMi2zmm80UNjmbvocMIeW5hO7JOXWdrQ/H49yOKfYX0MBgrj/KWgatBnEgRXyNyKD+A==}
-    hasBin: true
-
   chai@6.2.2:
     resolution: {integrity: sha512-NUPRluOfOiTKBKvWPtSD4PhFvWCqOi0BGStNWs57X9js7XGTprSmFoz5F0tWhR4WPjNeR9jXqdC7/UpSJTnlRg==}
     engines: {node: '>=18'}
@@ -836,9 +818,6 @@ packages:
   cross-spawn@7.0.6:
     resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
     engines: {node: '>= 8'}
-
-  dag-jose-utils@4.0.0:
-    resolution: {integrity: sha512-bmmXtVdEKp/zYH8El4GGkMREJioUztz8fzOErfy5dTbyKIVOF61C5sfsZLYCB/wiT/I9+SPNrQeo/Cx6Ik3wJQ==}
 
   debounce@1.2.1:
     resolution: {integrity: sha512-XRRe6Glud4rd/ZGQfiV1ruXSfbvfJedlV9Y6zOlP+2K04vBYiJEte6stfFkCP03aMnY5tsipamumUjL14fofug==}
@@ -1869,16 +1848,6 @@ snapshots:
     dependencies:
       events: 3.3.0
 
-  '@ipld/dag-cbor@9.2.5':
-    dependencies:
-      cborg: 4.3.2
-      multiformats: 13.4.2
-
-  '@ipld/dag-json@10.2.5':
-    dependencies:
-      cborg: 4.3.2
-      multiformats: 13.4.2
-
   '@jridgewell/gen-mapping@0.3.13':
     dependencies:
       '@jridgewell/sourcemap-codec': 1.5.5
@@ -2420,8 +2389,6 @@ snapshots:
 
   caniuse-lite@1.0.30001762: {}
 
-  cborg@4.3.2: {}
-
   chai@6.2.2: {}
 
   chalk@4.1.2:
@@ -2493,11 +2460,6 @@ snapshots:
       path-key: 3.1.1
       shebang-command: 2.0.0
       which: 2.0.2
-
-  dag-jose-utils@4.0.0:
-    dependencies:
-      '@ipld/dag-cbor': 9.2.5
-      multiformats: 13.4.2
 
   debounce@1.2.1: {}
 

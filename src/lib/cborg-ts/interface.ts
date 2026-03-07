@@ -60,3 +60,10 @@ export interface EncodeOptions {
   quickEncodeToken?: QuickEncodeToken
   typeEncoders?: { [typeName: string]: OptionalTypeEncoder }
 }
+
+export interface ByteWriter {
+  chunks: (Uint8Array | number[])[]
+  reset(): void
+  push(bytes: Uint8Array | number[]): void
+  toBytes(reset?: boolean | undefined): Uint8Array
+}

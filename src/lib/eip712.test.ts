@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { convertCBORToEIP712TypedData } from './eip712.js'
-import { encodePayload } from 'dag-jose-utils'
+import { encodePayload } from '../lib/dag-jose-utils.js'
 
 import { hashDomain, hashTypedData } from 'viem'
 

@@ -1,6 +1,6 @@
 import { error } from '@aioha/aioha/build/lib/errors.js'
-import { encode as encodeJson } from '@ipld/dag-json'
-import { encodePayload } from 'dag-jose-utils'
+import { encode as encodeJson } from '../lib/dag-json.js'
+import { encodePayload } from '../lib/dag-jose-utils.js'
 import { Result, MagiOperation, TxSigningShell, TxContainer, TxSigned, MagiEventEmitter } from '../types.js'
 import { MagiWalletBase } from './wallet.js'
 import { MagiClient } from '../lib/client.js'

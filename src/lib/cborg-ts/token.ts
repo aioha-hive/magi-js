@@ -43,6 +43,18 @@ class Type {
   static null = new Type(7, 'null', true)
   static undefined = new Type(7, 'undefined', true)
   static break = new Type(7, 'break', true)
+
+  /**
+   * Check equality between two Type instances. Safe to use across different
+   * copies of the Type class (e.g., when bundlers duplicate the module).
+   * (major, name) uniquely identifies a Type; terminal is implied by these.
+   * @param {Type} a
+   * @param {Type} b
+   * @returns {boolean}
+   */
+  static equals(a: Type, b: Type): boolean {
+    return a === b || (a.major === b.major && a.name === b.name)
+  }
 }
 
 class Token {
