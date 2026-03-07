@@ -1,16 +1,6 @@
 // Use Uint8Array directly in the browser, use Buffer in Node.js but don't
 // speak its name directly to avoid bundlers pulling in the `Buffer` polyfill
 
-export const useBuffer =
-  // @ts-ignore
-  globalThis.process &&
-  // @ts-ignore
-  !globalThis.process.browser &&
-  // @ts-ignore
-  globalThis.Buffer &&
-  // @ts-ignore
-  typeof globalThis.Buffer.isBuffer === 'function'
-
 const textDecoder = new TextDecoder()
 const textEncoder = new TextEncoder()
 
@@ -19,8 +9,18 @@ const textEncoder = new TextEncoder()
  * @returns {boolean}
  */
 function isBuffer(buf: Uint8Array): boolean {
-  // @ts-ignore
-  return useBuffer && globalThis.Buffer.isBuffer(buf)
+  return (
+    // @ts-ignore
+    globalThis.process &&
+    // @ts-ignore
+    !globalThis.process.browser &&
+    // @ts-ignore
+    globalThis.Buffer &&
+    // @ts-ignore
+    typeof globalThis.Buffer.isBuffer === 'function' &&
+    // @ts-ignore
+    globalThis.Buffer.isBuffer(buf)
+  )
 }
 
 /**
@@ -35,51 +35,13 @@ export function asU8A(buf: Uint8Array | number[]): Uint8Array {
   return isBuffer(buf) ? new Uint8Array(buf.buffer, buf.byteOffset, buf.byteLength) : buf
 }
 
-export const toString = useBuffer
-  ? // eslint-disable-line operator-linebreak
-    /**
-     * @param {Uint8Array} bytes
-     * @param {number} start
-     * @param {number} end
-     */
-    (bytes: Uint8Array, start: number, end: number) => {
-      return end - start > 64
-        ? // eslint-disable-line operator-linebreak
-          // @ts-ignore
-          globalThis.Buffer.from(bytes.subarray(start, end)).toString('utf8')
-        : utf8Slice(bytes, start, end)
-    }
-  : /* c8 ignore next 11 */
-    // eslint-disable-line operator-linebreak
-    /**
-     * @param {Uint8Array} bytes
-     * @param {number} start
-     * @param {number} end
-     */
-    (bytes: Uint8Array, start: number, end: number) => {
-      return end - start > 64 ? textDecoder.decode(bytes.subarray(start, end)) : utf8Slice(bytes, start, end)
-    }
+export const toString = (bytes: Uint8Array, start: number, end: number) => {
+  return end - start > 64 ? textDecoder.decode(bytes.subarray(start, end)) : utf8Slice(bytes, start, end)
+}
 
-export const fromString = useBuffer
-  ? // eslint-disable-line operator-linebreak
-    /**
-     * @param {string} string
-     */
-    (string: string) => {
-      return string.length > 64
-        ? // eslint-disable-line operator-linebreak
-          // @ts-ignore
-          globalThis.Buffer.from(string)
-        : utf8ToBytes(string)
-    }
-  : /* c8 ignore next 7 */
-    // eslint-disable-line operator-linebreak
-    /**
-     * @param {string} string
-     */
-    (string: string) => {
-      return string.length > 64 ? textEncoder.encode(string) : utf8ToBytes(string)
-    }
+export const fromString = (string: string) => {
+  return string.length > 64 ? textEncoder.encode(string) : utf8ToBytes(string)
+}
 
 /**
  * Buffer variant not fast enough for what we need
@@ -90,157 +52,53 @@ export const fromArray = (arr: number[]): Uint8Array => {
   return Uint8Array.from(arr)
 }
 
-export const slice = useBuffer
-  ? // eslint-disable-line operator-linebreak
-    /**
-     * @param {Uint8Array} bytes
-     * @param {number} start
-     * @param {number} end
-     */
-    (bytes: Uint8Array, start: number, end: number) => {
-      if (isBuffer(bytes)) {
-        return new Uint8Array(bytes.subarray(start, end))
-      }
-      return bytes.slice(start, end)
-    }
-  : /* c8 ignore next 9 */
-    // eslint-disable-line operator-linebreak
-    /**
-     * @param {Uint8Array} bytes
-     * @param {number} start
-     * @param {number} end
-     */
-    (bytes: Uint8Array, start: number, end: number) => {
-      return bytes.slice(start, end)
-    }
+export const slice = (bytes: Uint8Array, start: number, end: number) => {
+  return bytes.slice(start, end)
+}
 
-export const concat = useBuffer
-  ? // eslint-disable-line operator-linebreak
-    /**
-     * @param {Uint8Array[]} chunks
-     * @param {number} length
-     * @returns {Uint8Array}
-     */
-    (chunks: Uint8Array[], length: number): Uint8Array => {
-      // might get a stray plain Array here
-      /* c8 ignore next 1 */
-      chunks = chunks.map((c) =>
-        c instanceof Uint8Array
-          ? c
-          : // this case is occasionally missed during test runs so becomes coverage-flaky
-            /* c8 ignore next 4 */
-            // eslint-disable-line operator-linebreak
-            // @ts-ignore
-            globalThis.Buffer.from(c)
+export const concat = (chunks: Uint8Array[], length: number): Uint8Array => {
+  const out = new Uint8Array(length)
+  let off = 0
+  for (let b of chunks) {
+    if (off + b.length > out.length) {
+      // final chunk that's bigger than we need
+      b = b.subarray(0, out.length - off)
+    }
+    out.set(b, off)
+    off += b.length
+  }
+  return out
+}
+
+export const alloc = (size: number): Uint8Array => {
+  return new Uint8Array(size)
+}
+
+export const toHex = (d: Uint8Array): string => {
+  if (typeof d === 'string') {
+    return d
+  }
+  // @ts-ignore not smart enough to figure this out
+  return Array.prototype.reduce.call(toBytes(d), (p, c) => `${p}${c.toString(16).padStart(2, '0')}`, '')
+}
+
+export const fromHex = (hex: string | Uint8Array): Uint8Array => {
+  if (hex instanceof Uint8Array) {
+    return hex
+  }
+  if (!hex.length) {
+    return new Uint8Array(0)
+  }
+  return new Uint8Array(
+    hex
+      .split('')
+      .map((/** @type {string} */ c, /** @type {number} */ i, /** @type {string[]} */ d) =>
+        i % 2 === 0 ? `0x${c}${d[i + 1]}` : ''
       )
-      // @ts-ignore
-      return asU8A(globalThis.Buffer.concat(chunks, length))
-    }
-  : /* c8 ignore next 19 */
-    // eslint-disable-line operator-linebreak
-    /**
-     * @param {Uint8Array[]} chunks
-     * @param {number} length
-     * @returns {Uint8Array}
-     */
-    (chunks: Uint8Array[], length: number): Uint8Array => {
-      const out = new Uint8Array(length)
-      let off = 0
-      for (let b of chunks) {
-        if (off + b.length > out.length) {
-          // final chunk that's bigger than we need
-          b = b.subarray(0, out.length - off)
-        }
-        out.set(b, off)
-        off += b.length
-      }
-      return out
-    }
-
-export const alloc = useBuffer
-  ? // eslint-disable-line operator-linebreak
-    /**
-     * @param {number} size
-     * @returns {Uint8Array}
-     */
-    (size: number): Uint8Array => {
-      // we always write over the contents we expose so this should be safe
-      // @ts-ignore
-      return globalThis.Buffer.allocUnsafe(size)
-    }
-  : /* c8 ignore next 8 */
-    // eslint-disable-line operator-linebreak
-    /**
-     * @param {number} size
-     * @returns {Uint8Array}
-     */
-    (size: number): Uint8Array => {
-      return new Uint8Array(size)
-    }
-
-export const toHex = useBuffer
-  ? // eslint-disable-line operator-linebreak
-    /**
-     * @param {Uint8Array} d
-     * @returns {string}
-     */
-    (d: Uint8Array): string => {
-      if (typeof d === 'string') {
-        return d
-      }
-      // @ts-ignore
-      return globalThis.Buffer.from(toBytes(d)).toString('hex')
-    }
-  : /* c8 ignore next 12 */
-    // eslint-disable-line operator-linebreak
-    /**
-     * @param {Uint8Array} d
-     * @returns {string}
-     */
-    (d: Uint8Array): string => {
-      if (typeof d === 'string') {
-        return d
-      }
-      // @ts-ignore not smart enough to figure this out
-      return Array.prototype.reduce.call(toBytes(d), (p, c) => `${p}${c.toString(16).padStart(2, '0')}`, '')
-    }
-
-export const fromHex = useBuffer
-  ? // eslint-disable-line operator-linebreak
-    /**
-     * @param {string|Uint8Array} hex
-     * @returns {Uint8Array}
-     */
-    (hex: string | Uint8Array): Uint8Array => {
-      if (hex instanceof Uint8Array) {
-        return hex
-      }
-      // @ts-ignore
-      return globalThis.Buffer.from(hex, 'hex')
-    }
-  : /* c8 ignore next 17 */
-    // eslint-disable-line operator-linebreak
-    /**
-     * @param {string|Uint8Array} hex
-     * @returns {Uint8Array}
-     */
-    (hex: string | Uint8Array): Uint8Array => {
-      if (hex instanceof Uint8Array) {
-        return hex
-      }
-      if (!hex.length) {
-        return new Uint8Array(0)
-      }
-      return new Uint8Array(
-        hex
-          .split('')
-          .map((/** @type {string} */ c, /** @type {number} */ i, /** @type {string[]} */ d) =>
-            i % 2 === 0 ? `0x${c}${d[i + 1]}` : ''
-          )
-          .filter(Boolean)
-          .map((/** @type {string} */ e) => parseInt(e, 16))
-      )
-    }
+      .filter(Boolean)
+      .map((/** @type {string} */ e) => parseInt(e, 16))
+  )
+}
 
 /**
  * @param {Uint8Array|ArrayBuffer|ArrayBufferView} obj
@@ -266,12 +124,6 @@ function toBytes(obj: Uint8Array | ArrayBuffer | ArrayBufferView): Uint8Array {
  * @returns {number}
  */
 export function compare(b1: Uint8Array, b2: Uint8Array): number {
-  /* c8 ignore next 5 */
-  if (isBuffer(b1) && isBuffer(b2)) {
-    // probably not possible to get here in the current API
-    // @ts-ignore Buffer
-    return b1.compare(b2)
-  }
   for (let i = 0; i < b1.length; i++) {
     if (b1[i] === b2[i]) {
       continue

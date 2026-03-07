@@ -2,22 +2,9 @@
 import { Token, Type } from './cborg-ts/token.js'
 import { encode as cborgEnc } from './cborg-ts/json/encode.js'
 import type { ToString } from 'multiformats'
-import type { ArrayBufferView, ByteView } from 'multiformats/codecs/interface'
-import { CID } from 'multiformats'
+import type { ByteView } from 'multiformats/codecs/interface'
+import { CID } from 'multiformats/cid'
 import { base64 } from 'multiformats/bases/base64'
-
-/**
- * @template T
- * @param {ByteView<T> | ArrayBufferView<T>} buf
- * @returns {ByteView<T>}
- */
-function toByteView<T>(buf: ByteView<T> | ArrayBufferView<T>): ByteView<T> {
-  if (buf instanceof ArrayBuffer) {
-    return new Uint8Array(buf, 0, buf.byteLength)
-  }
-
-  return buf
-}
 
 /**
  * cidEncoder will receive all Objects during encode, it needs to filter out
