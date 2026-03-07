@@ -4,11 +4,11 @@ import { VscTxIntent } from '@aioha/aioha/build/types.js'
 import { SimpleEventEmitter } from '@aioha/aioha/build/lib/event-emitter.js'
 import type { Client as ViemClient } from 'viem'
 import { MagiClient } from './lib/client.js'
-import { Asset, MagiEventEmitter, MagiEvents, MagiKeyType, MagiOperation, Result, Wallet } from './types.js'
+import { Asset, MagiEventEmitter, MagiEvents, KeyTypes, MagiOperation, Result, Wallet } from './types.js'
 import { MagiWallet, MagiWalletBase } from './wallets/wallet.js'
 import { MagiWalletAioha } from './wallets/hive.js'
 import { MagiWalletViem } from './wallets/viem.js'
-export { Wallet, Asset, MagiKeyType, MagiOperation } from './types.js'
+export { Wallet, Asset, KeyTypes, MagiOperation } from './types.js'
 
 const notLoggedInResult = error(4900, 'Wallet not connected')
 const invalidAmtErr = error(5006, 'amount must be greater than 0')
@@ -133,7 +133,7 @@ export class Magi implements MagiWallet {
    * @param keyType Active or posting auth (only applicable for Hive wallets)
    * @returns Transaction result
    */
-  async signAndBroadcastTx(tx: MagiOperation[], keyType?: MagiKeyType): Promise<Result> {
+  async signAndBroadcastTx(tx: MagiOperation[], keyType?: KeyTypes): Promise<Result> {
     if (!this.isConnected()) return notLoggedInResult
     if (tx.length === 0) return emptyOpsErr
     return await this.getWI()!.signAndBroadcastTx(tx, keyType)
@@ -148,7 +148,7 @@ export class Magi implements MagiWallet {
     payload: any,
     rc_limit: number,
     intents: VscTxIntent[],
-    keyType?: MagiKeyType
+    keyType?: KeyTypes
   ): Promise<Result> {
     if (!this.isConnected()) return notLoggedInResult
     return await this.getWI()!.call(contractId, action, payload, rc_limit, intents, keyType)

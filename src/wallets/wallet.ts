@@ -1,6 +1,6 @@
 import { VscStakeType as StakeType, VscTxIntent as Intent } from '@aioha/aioha/build/types.js'
 import { error } from '@aioha/aioha/build/lib/errors.js'
-import { Asset, MagiKeyType, MagiOperation, Result, OpFer, MagiEventEmitter } from '../types.js'
+import { Asset, KeyTypes, MagiOperation, Result, OpFer, MagiEventEmitter } from '../types.js'
 import { MagiClient } from '../lib/client.js'
 import { getNonce } from '../requests.js'
 
@@ -15,7 +15,7 @@ export abstract class MagiWalletBase implements MagiWallet {
   }
 
   abstract getUser(prefix?: boolean): string | undefined
-  abstract signAndBroadcastTx(tx: MagiOperation[], keyType?: MagiKeyType): Promise<Result>
+  abstract signAndBroadcastTx(tx: MagiOperation[], keyType?: KeyTypes): Promise<Result>
 
   call(
     contractId: string,
@@ -23,7 +23,7 @@ export abstract class MagiWalletBase implements MagiWallet {
     payload: any,
     rc_limit: number,
     intents: Intent[],
-    keyType?: MagiKeyType
+    keyType?: KeyTypes
   ): Promise<Result> {
     return this.signAndBroadcastTx(
       [{ type: 'call', payload: { contract_id: contractId, action, payload, rc_limit, intents } }],
@@ -34,7 +34,7 @@ export abstract class MagiWalletBase implements MagiWallet {
   fer(type: OpFer['type'], to: string, amount: number, currency: Asset, memo?: string): Promise<Result> {
     return this.signAndBroadcastTx(
       [{ type, payload: { from: this.getUser(true)!, to, amount: amount.toFixed(3), asset: currency, memo } }],
-      MagiKeyType.Active
+      KeyTypes.Active
     )
   }
 
@@ -76,15 +76,8 @@ export abstract class MagiWalletBase implements MagiWallet {
 }
 
 export interface MagiWallet {
-  signAndBroadcastTx(tx: MagiOperation[], keyType?: MagiKeyType): Promise<Result>
-  call(
-    contractId: string,
-    action: string,
-    payload: any,
-    rc_limit: number,
-    intents: Intent[],
-    keyType?: MagiKeyType
-  ): Promise<Result>
+  signAndBroadcastTx(tx: MagiOperation[], keyType?: KeyTypes): Promise<Result>
+  call(contractId: string, action: string, payload: any, rc_limit: number, intents: Intent[], keyType?: KeyTypes): Promise<Result>
   transfer(to: string, amount: number, currency: Asset, memo?: string): Promise<Result>
   unmap(to: string, amount: number, currency: Asset, memo?: string): Promise<Result>
   stake(stakeType: StakeType, amount: number, to?: string, memo?: string): Promise<Result>

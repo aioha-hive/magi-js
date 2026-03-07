@@ -29,7 +29,7 @@ export enum Wallet {
   Ethereum = 'evm'
 }
 
-export enum MagiKeyType {
+export enum KeyTypes {
   Posting = 'posting',
   Active = 'active'
 }
