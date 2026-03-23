@@ -1,6 +1,6 @@
 {
   "name": "@aioha/magi",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "TypeScript library for Magi network",
   "main": "build/index.js",
   "types": "build/index.d.ts",
@@ -37,7 +37,7 @@
   "devDependencies": {
     "@aioha/aioha": "^1.8.2",
     "ts-loader": "^9.5.4",
-    "viem": "^2.44.1",
+    "viem": "^2.47.6",
     "vitest": "^4.0.16",
     "webpack": "^5.104.1",
     "webpack-bundle-analyzer": "^5.2.0",

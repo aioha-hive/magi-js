@@ -120,7 +120,7 @@ export class Magi implements MagiWallet {
    * Set the wallet type to use (Hive or Ethereum)
    * @param wallet The new wallet enum
    */
-  setWallet(wallet: Wallet) {
+  setWallet(wallet?: Wallet) {
     if (wallet !== this.currentWallet) {
       this.currentWallet = wallet
       this.eventEmitter.emit('wallet_changed')
