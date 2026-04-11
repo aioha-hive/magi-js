@@ -90,7 +90,7 @@ export class Magi implements MagiWallet {
   }
 
   /**
-   * Manually set the nonce for the next transaction.
+   * Manually set the current nonce
    * @param newNonce The nonce to set
    */
   setNonce(newNonce: number) {
