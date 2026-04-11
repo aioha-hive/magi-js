@@ -90,6 +90,22 @@ export class Magi implements MagiWallet {
   }
 
   /**
+   * Manually set the nonce for the next transaction.
+   * @param newNonce The nonce to set
+   */
+  setNonce(newNonce: number) {
+    this.getWI()?.setNonce(newNonce)
+  }
+
+  /**
+   * Get current nonce set
+   * @returns The current nonce set in wallet instance
+   */
+  getNonce() {
+    return this.getWI()?.getNonce()
+  }
+
+  /**
    * Returns a boolean of whether an account is connected or not.
    */
   isConnected(): boolean {

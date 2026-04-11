@@ -70,6 +70,14 @@ export abstract class MagiWalletBase implements MagiWallet {
     }
   }
 
+  setNonce(newNonce: number) {
+    this.nonce = newNonce
+  }
+
+  getNonce() {
+    return this.nonce
+  }
+
   protected emitSignTx() {
     this.eventEmitter.emit('sign_tx_request')
   }
