@@ -4,11 +4,12 @@ import { VscTxIntent } from '@aioha/aioha/build/types.js'
 import { SimpleEventEmitter } from '@aioha/aioha/build/lib/event-emitter.js'
 import type { Client as ViemClient } from 'viem'
 import { MagiClient } from './lib/client.js'
-import { Asset, MagiEventEmitter, MagiEvents, KeyTypes, MagiOperation, Result, Wallet } from './types.js'
+import { Asset, BtcClient, MagiEventEmitter, MagiEvents, KeyTypes, MagiOperation, Result, Wallet } from './types.js'
 import { MagiWallet, MagiWalletBase } from './wallets/wallet.js'
 import { MagiWalletAioha } from './wallets/hive.js'
 import { MagiWalletViem } from './wallets/viem.js'
-export { Wallet, Asset, KeyTypes, MagiOperation } from './types.js'
+import { MagiWalletBitcoin } from './wallets/bitcoin.js'
+export { Wallet, Asset, KeyTypes, MagiOperation, BtcClient } from './types.js'
 
 const notLoggedInResult = error(4900, 'Wallet not connected')
 const invalidAmtErr = error(5006, 'amount must be greater than 0')
@@ -22,6 +23,7 @@ export class Magi implements MagiWallet {
   private wallets: {
     hive?: MagiWalletAioha
     evm?: MagiWalletViem
+    btc?: MagiWalletBitcoin
   }
   private eventEmitter: MagiEventEmitter
 
@@ -52,6 +54,18 @@ export class Magi implements MagiWallet {
       this.wallets.evm = new MagiWalletViem(this.client, this.eventEmitter, viemClient)
     } else {
       this.wallets.evm.setClient(viemClient)
+    }
+  }
+
+  /**
+   * Register a Bitcoin wallet using a BtcClient-compatible signer.
+   * @param btcClient An object with `address` and `signMessage()`
+   */
+  setBitcoin(btcClient: BtcClient) {
+    if (!this.wallets.btc) {
+      this.wallets.btc = new MagiWalletBitcoin(this.client, this.eventEmitter, btcClient)
+    } else {
+      this.wallets.btc.setClient(btcClient)
     }
   }
 

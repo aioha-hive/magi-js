@@ -26,7 +26,13 @@ export enum Asset {
 
 export enum Wallet {
   Hive = 'hive',
-  Ethereum = 'evm'
+  Ethereum = 'evm',
+  Bitcoin = 'btc'
+}
+
+export interface BtcClient {
+  address: string
+  signMessage(message: string): Promise<string>
 }
 
 export enum KeyTypes {
