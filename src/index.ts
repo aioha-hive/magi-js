@@ -9,6 +9,7 @@ import { MagiWallet, MagiWalletBase } from './wallets/wallet.js'
 import { MagiWalletAioha } from './wallets/hive.js'
 import { MagiWalletViem } from './wallets/viem.js'
 import { MagiWalletBitcoin } from './wallets/bitcoin.js'
+import { MagiWalletViewOnly } from './wallets/view-only.js'
 export { Wallet, Asset, KeyTypes, MagiOperation, BtcClient } from './types.js'
 
 const notLoggedInResult = error(4900, 'Wallet not connected')
@@ -24,6 +25,7 @@ export class Magi implements MagiWallet {
     hive?: MagiWalletAioha
     evm?: MagiWalletViem
     btc?: MagiWalletBitcoin
+    viewonly?: MagiWalletViewOnly
   }
   private eventEmitter: MagiEventEmitter
 
@@ -66,6 +68,20 @@ export class Magi implements MagiWallet {
       this.wallets.btc = new MagiWalletBitcoin(this.client, this.eventEmitter, btcClient)
     } else {
       this.wallets.btc.setClient(btcClient)
+    }
+  }
+
+  /**
+   * Register a view-only wallet from a prefixed DID string (e.g. `hive:alice`,
+   * `did:pkh:eip155:1:0x...`, `did:pkh:bip122:<mainnet-genesis>:bc1...`).
+   * All signing and broadcast operations return an error.
+   * @param did Prefixed DID identifying the account to observe
+   */
+  setViewOnly(did: string) {
+    if (!this.wallets.viewonly) {
+      this.wallets.viewonly = new MagiWalletViewOnly(this.client, this.eventEmitter, did)
+    } else {
+      this.wallets.viewonly.setDid(did)
     }
   }
 

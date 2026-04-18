@@ -27,7 +27,8 @@ export enum Asset {
 export enum Wallet {
   Hive = 'hive',
   Ethereum = 'evm',
-  Bitcoin = 'btc'
+  Bitcoin = 'btc',
+  ViewOnly = 'viewonly'
 }
 
 export interface BtcClient {
