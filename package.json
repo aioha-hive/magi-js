@@ -1,6 +1,6 @@
 {
   "name": "@aioha/magi",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "TypeScript library for Magi network",
   "main": "build/index.js",
   "types": "build/index.d.ts",

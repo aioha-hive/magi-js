@@ -83,6 +83,9 @@ export class Magi implements MagiWallet {
     } else {
       this.wallets.viewonly.setDid(did)
     }
+    if (this.currentWallet === Wallet.ViewOnly) {
+      this.eventEmitter.emit('wallet_changed')
+    }
   }
 
   /**
